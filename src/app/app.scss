@@ -1,7 +1,22 @@
+
+$header-height: 60px;
 $footer-height: 40px;
 
+header {
+  height: $header-height;
+  background: #ffeacf;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+
+  h1 {
+    font-weight: normal;
+    margin: 0
+  }
+}
+
 main {
-  min-height: calc(100dvh - $footer-height);
+  min-height: calc(100dvh - $footer-height - $header-height);
   display: flex;
   align-items: center;
   justify-content: center;
