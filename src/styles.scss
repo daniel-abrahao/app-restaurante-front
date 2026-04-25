@@ -1,1 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+:root{
+	--bg:#0f1221;
+	--surface:#0f1724;
+	--muted:#bfc5d0;
+	--accent:#c9a45b; /* gold */
+	--glass: rgba(255,255,255,0.04);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+	margin:0; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+	background: linear-gradient(180deg,var(--bg), #0b0d14); color:var(--muted);
+	-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+h1,h2,h3{font-family:'Playfair Display', serif; color:#fff}
+.container{max-width:920px;margin:0 auto;padding:1rem}
+
+a { color: inherit }
+
+/* Utility */
+.btn{display:inline-block;padding:.6rem 1rem;border-radius:8px;text-decoration:none}
+

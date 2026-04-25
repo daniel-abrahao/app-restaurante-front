@@ -1,0 +1,20 @@
+<main class="menu container">
+  <header class="menu-head">
+    <div>
+      <h2>Cardápio</h2>
+      <p class="lead">Seleção de pratos assinados pelo nosso chef</p>
+    </div>
+    <div>
+      <a class="btn ghost" routerLink="/">Voltar</a>
+    </div>
+  </header>
+  <section class="dishes">
+    <article class="dish" *ngFor="let d of dishes">
+      <div class="dish-row">
+        <h3 class="dish-name">{{d.name}}</h3>
+        <div class="price">{{d.price}}</div>
+      </div>
+      <p class="dish-desc">{{d.description}}</p>
+    </article>
+  </section>
+</main>

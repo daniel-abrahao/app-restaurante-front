@@ -1,1 +1,27 @@
-<router-outlet />
+<header class="site-header">
+	<div class="container header-inner">
+		<a class="logo" routerLink="/">Restaurante Sabor Caseiro</a>
+		<nav class="nav">
+			<a routerLink="/menu">Cardápio</a>
+			<a href="#contato">Contato</a>
+		</nav>
+	</div>
+</header>
+
+<router-outlet></router-outlet>
+
+<footer class="site-footer container">
+	<div style="display:flex;justify-content:space-between;align-items:center">
+		<small>© Restaurante Sabor Caseiro</small>
+		<small style="color:var(--muted)">Rua Exemplo, 123 — Reservas: (00) 0000-0000</small>
+	</div>
+</footer>
+
+<style>
+	.header-inner{display:flex;justify-content:space-between;align-items:center;padding:1rem 0}
+	.site-header{border-bottom:1px solid rgba(255,255,255,0.03);backdrop-filter:blur(6px)}
+	.logo{font-family:'Playfair Display',serif;font-size:1.25rem;color:var(--accent);text-decoration:none}
+	.nav a{margin-left:1rem;color:var(--muted);text-decoration:none;padding:.35rem .6rem;border-radius:8px}
+	.nav a:hover{background:rgba(255,255,255,0.02);color:#fff}
+	.site-footer{border-top:1px solid rgba(255,255,255,0.03);padding:1rem 0;margin-top:3rem;color:var(--muted)}
+</style>
