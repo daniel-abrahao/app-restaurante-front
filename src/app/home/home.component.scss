@@ -1,0 +1,36 @@
+:host {
+  display: block;
+}
+
+.home {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(160deg, #fff8ef 0%, #ffffff 100%);
+}
+
+.hero-card {
+  width: min(100%, 44rem);
+}
+
+.hero__eyebrow {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a5b19;
+}
+
+.hero__description {
+  margin: 0 0 1.5rem;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.hero__cta {
+  text-decoration: none;
+}
+
+
