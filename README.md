@@ -1,59 +1,102 @@
-# AppRestauranteFront
+# App Restaurante Front
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.8.
+Front-end do projeto desenvolvido para a disciplina de pós-graduação **Desenvolvimento Full Stack**.
 
-## Development server
+Este repositório concentra a aplicação cliente do sistema, construída com **Angular v21** e **PrimeNG**, seguindo uma abordagem moderna para interfaces reativas, componentização e experiência do usuário.
 
-To start a local development server, run:
+## Sobre o projeto
 
-```bash
-ng serve
-```
+O objetivo deste front-end é disponibilizar a interface visual do sistema de restaurante, consumindo as funcionalidades da aplicação e oferecendo uma base organizada para evolução durante a disciplina.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Tecnologias utilizadas
 
-## Code scaffolding
+- Node.js 22
+- npm
+- Angular v21
+- PrimeNG
+- TypeScript
+- RxJS
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Pré-requisitos
 
-```bash
-ng generate component component-name
-```
+Antes de iniciar, verifique se o ambiente está utilizando:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- **Node.js 22** ou superior
+- `npm` compatível com o projeto
 
-```bash
-ng generate --help
-```
+> Recomendação: use Node.js 22 para evitar incompatibilidades com dependências e com a versão atual do Angular.
 
-## Building
+## Instalação
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Instale as dependências com:
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
+## Comandos disponíveis
 
-For end-to-end (e2e) testing, run:
+Use sempre os scripts do `package.json` com `npm run`.
+
+### Desenvolvimento local
 
 ```bash
-ng e2e
+npm run start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+O servidor de desenvolvimento será iniciado em `http://localhost:4200/`.
 
-## Additional Resources
+### Build de produção
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm run build
+```
+
+O resultado da compilação será gerado em `dist/`.
+
+### Build em modo observação
+
+```bash
+npm run watch
+```
+
+Esse comando recompila a aplicação automaticamente durante o desenvolvimento.
+
+### Testes
+
+```bash
+npm run test
+```
+
+## Estrutura do projeto
+
+```text
+src/
+  app/
+	app.config.ts
+	app.routes.ts
+	app.ts
+	app.html
+	app.scss
+  main.ts
+  styles.scss
+```
+
+## Observações importantes
+
+- Este projeto é o **front-end** do trabalho da disciplina.
+- A aplicação foi construída em cima do **Angular v21**.
+- Os componentes visuais utilizam **PrimeNG** como base de UI.
+- Se houver troca de versão do Node.js, valide novamente os comandos de instalação e build.
+
+## Fluxo recomendado
+
+1. Instalar dependências com `npm install`
+2. Iniciar o ambiente com `npm run start`
+3. Desenvolver e validar alterações localmente
+4. Executar `npm run test`
+5. Gerar a versão final com `npm run build`
+
+## Licença
+
+Projeto acadêmico desenvolvido para fins de estudo e avaliação na pós-graduação.
