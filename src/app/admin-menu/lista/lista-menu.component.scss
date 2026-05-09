@@ -20,73 +20,89 @@
 	list-style: none;
 	margin: 0;
 	padding: 0;
-	display: grid;
+	display: block;
 	gap: 0.75rem;
 }
 
-.lista-item {
-	display: grid;
-	grid-template-columns: 1fr auto;
-	gap: 0.5rem;
-	padding: 0.75rem;
-	border: 1px solid #eee;
-	border-radius: 8px;
-	align-items: center;
-}
 
-.item-main {
-	display: flex;
-	gap: 1rem;
-	align-items: baseline;
-}
-
-.item-name {
-	font-weight: 700;
-}
-
-.item-category {
-	font-size: 0.9rem;
-	color: #666;
-}
-
-.item-body {
-	display: flex;
-	gap: 1rem;
-	align-items: center;
-}
-
-.item-ingredients {
-	color: #444;
-}
-
-.item-price {
-	font-weight: 700;
-	color: #1976d2;
-}
-
-.item-actions {
+/* Tabs */
+.tabs {
 	display: flex;
 	gap: 0.5rem;
+	margin-bottom: 0.75rem;
 }
 
-.btn-danger {
-	background: #d32f2f;
-	color: #fff;
-	border: none;
-	padding: 0.4rem 0.6rem;
-	border-radius: 6px;
+.tab {
+	padding: 0.5rem 0.75rem;
+	background: #fff;
+	border: 1px solid #e6eef9;
+	border-radius: 999px;
 	cursor: pointer;
 }
 
+.tab.active {
+	background: linear-gradient(90deg,#1366d6,#1976d2);
+	color: #fff;
+	border-color: transparent;
+}
+
+/* botão ícone para ações (lixeira) */
+.btn-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	padding: 0;
+	border-radius: 8px;
+	background: linear-gradient(90deg,#dc3545,#d32f2f);
+	border: none;
+	color: #fff;
+	cursor: pointer;
+}
+
+.btn-icon svg { display: block; }
+
+.menu-table {
+	width: 100%;
+	border-collapse: collapse;
+	background: #fff;
+	border: 1px solid #eef2f6;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 6px 18px rgba(15,23,42,0.03);
+	margin-bottom: 1rem;
+}
+
+.menu-table thead {
+	background: #f8fafc;
+}
+
+.menu-table th, .menu-table td {
+	text-align: left;
+	padding: 0.75rem 1rem;
+	border-bottom: 1px solid #f1f5f9;
+}
+
+.menu-table tbody tr:last-child td { border-bottom: none; }
+
+.col-name { font-weight: 800; color: #0f172a; width: 30%; }
+.col-ingred { color: #334155; width: 50%; }
+.col-valor { font-weight: 700; color: #0b63c6; width: 12%; }
+.col-actions { width: 8%; text-align: right; }
+
+.empty-row { text-align: center; color: #64748b; padding: 1rem; }
+
+
+/* remova styles antigos de lista individual (não usados com tabelas) */
+
 @media (max-width: 600px) {
 	.lista-item {
-		grid-template-columns: 1fr;
-		gap: 0.5rem;
+		padding: 0.75rem;
 	}
 
-	.item-body {
-		flex-direction: column;
-		align-items: flex-start;
-	}
+	.item-main { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+
+	.item-actions { justify-content: flex-start; }
 }
 
