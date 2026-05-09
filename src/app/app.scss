@@ -9,8 +9,8 @@ $footer-height: 40px;
   left: 0;
   right: 0;
   height: $header-height;
-  background: #ffffff;
-  border-bottom: 1px solid #e6eef9;
+  background: var(--olive-50);
+  border-bottom: 1px solid var(--olive-300);
   display: flex;
   align-items: center;
   z-index: 1000;
@@ -24,11 +24,11 @@ $footer-height: 40px;
   justify-content: space-between;
 }
 
-.brand-link { font-weight: 700; color: #0f172a; text-decoration: none; }
+.brand-link { font-weight: 700; color: var(--accent-text); text-decoration: none; display:flex; gap:8px; align-items:center }
 
 .topnav { display: flex; gap: 0.75rem; }
-.topnav-link { color: #0f172a; padding: 0.5rem 0.75rem; text-decoration: none; border-radius: 6px; }
-.topnav-link:hover { background: #f1f5f9; }
+.topnav-link { color: var(--accent-text); padding: 0.5rem 0.75rem; text-decoration: none; border-radius: 6px; }
+.topnav-link:hover { background: var(--olive-300); color: var(--accent-text); }
 
 main {
   min-height: calc(100dvh - $footer-height - $header-height);
@@ -36,7 +36,7 @@ main {
   align-items: flex-start;
   justify-content: center;
   padding: calc($header-height + 1rem) 1rem 2rem 1rem; /* compensar header fixo */
-  background: linear-gradient(160deg, #fff8ef 0%, #ffffff 100%);
+  background: linear-gradient(160deg, var(--olive-50) 0%, #ffffff 60%);
 }
 
 footer {
@@ -44,7 +44,7 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ffeacf;
-  border-top: 1px solid #ffb658;
+  background: var(--olive-50);
+  border-top: 1px solid var(--olive-300);
   padding: 10px;
 }

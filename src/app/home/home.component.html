@@ -1,19 +1,27 @@
 <section class="p-card hero-card">
-  <div class="p-card-body">
-    <p class="hero__eyebrow">Restaurante</p>
-    <h1 id="home-title" class="p-card-title">Gerencie seu cardápio com simplicidade</h1>
-    <p class="p-card-content hero__description">
-      Organize itens do cardápio por nome, categoria, preço, descrição e disponibilidade em um único lugar.
-    </p>
-    <div class="hero__actions">
-      <a class="p-button p-component p-button-raised hero__cta" routerLink="/login" aria-label="Ir para tela de login">
-        <span class="p-button-label">Começar agora</span>
-      </a>
+    <div class="p-card-body">
+      <p class="hero__eyebrow">Restaurante</p>
+      <h1 id="home-title" class="p-card-title">Gerencie seu cardápio com simplicidade</h1>
+      <p class="p-card-content hero__description">
+        Organize itens do cardápio por nome, categoria, preço, descrição e disponibilidade em um único lugar.
+      </p>
+      <div class="hero__actions">
+        <a class="btn btn-primary hero-cta" routerLink="/login" aria-label="Ir para tela de login">
+          Começar agora
+        </a>
 
-      <a class="p-button p-component hero__admin" routerLink="/menu" aria-label="Ir para administração do cardápio">
-        <span class="p-button-label">Editar cardápio</span>
-      </a>
+        <a class="btn btn-outline hero-admin" routerLink="/menu" aria-label="Ir para administração do cardápio">
+          <img src="/images/olive-leaf.svg" alt="" class="icon" aria-hidden="true"/>
+          Editar cardápio
+        </a>
     </div>
-  </div>
+    </div>
+      <div class="hero-links">
+        <a routerLink="/menu" class="link">Ver cardápio</a>
+        <a routerLink="/" fragment="home-title" class="link">Ir para a seção</a>
+      </div>
+      <div class="hero-right">
+        <img src="/images/hero-illustration.svg" alt="Ilustração de pratos" class="hero-image" />
+      </div>
 </section>
 

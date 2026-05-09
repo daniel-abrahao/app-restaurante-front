@@ -67,8 +67,8 @@ textarea {
 }
 
 input:focus, select:focus, textarea:focus {
-	border-color: #7aa7ff;
-	box-shadow: 0 6px 20px rgba(122,167,255,0.12);
+	border-color: var(--olive-600);
+	box-shadow: 0 6px 20px rgba(138,169,107,0.12);
 }
 
 .form-actions {
@@ -88,9 +88,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .btn-primary {
-	background: linear-gradient(90deg,#1366d6,#1976d2);
+	background: linear-gradient(90deg,var(--olive-600),var(--olive-500));
 	color: #fff;
-	box-shadow: 0 6px 16px rgba(25,118,210,0.18);
+	box-shadow: 0 6px 16px rgba(138,169,107,0.18);
 }
 
 .btn-secondary {

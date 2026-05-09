@@ -17,3 +17,16 @@ body {
 *:where(:not(button):not(.p-button)) {
   color: inherit !important;
 }
+
+/* Tema: verde oliva claro */
+:root {
+  --olive-600: #8AA96B;
+  --olive-500: #A3B18A;
+  --olive-300: #C9D6B0;
+  --olive-50:  #F6FFF0;
+  --accent-text: #0f172a;
+}
+
+/* Utility classes */
+.icon-accent { color: var(--olive-600); }
+
