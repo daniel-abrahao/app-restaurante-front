@@ -1,5 +1,6 @@
 .formulario-container {
-	max-width: 720px;
+	width: 100%;
+	max-width: 900px;
 	margin: 0 auto;
 	padding: 1rem;
 }
@@ -41,6 +42,9 @@
 }
 
 .third { display:flex; flex-direction:column; }
+
+/* garantir inputs ocupando toda largura da coluna */
+.third input, .third select { width: 100%; box-sizing: border-box; }
 
 .ingredients-field { margin-top: 0.5rem; }
 

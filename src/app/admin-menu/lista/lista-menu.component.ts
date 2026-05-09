@@ -10,7 +10,7 @@ import { MenuService, MenuItem } from '../menu.service';
   styleUrls: ['./lista-menu.component.scss']
 })
 export class ListaMenuComponent implements OnInit, OnDestroy {
-  private menuService = inject(MenuService);
+  menuService = inject(MenuService);
   items: MenuItem[] = [];
   private sub: Subscription | null = null;
   categories = ['entrada', 'prato_principal', 'sobremesa', 'bebida'];
@@ -50,5 +50,10 @@ export class ListaMenuComponent implements OnInit, OnDestroy {
   removeItem(item: MenuItem): void {
     const idx = this.items.indexOf(item);
     if (idx >= 0) this.menuService.remove(idx);
+  }
+
+  getGlobalIndex(category: string, item: MenuItem): number {
+    // find index in global items array matching the reference
+    return this.items.findIndex(i => i === item);
   }
 }

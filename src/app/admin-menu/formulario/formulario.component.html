@@ -1,7 +1,7 @@
 <section class="formulario-container">
 	<h2 id="form-title" class="formulario-title">Cadastrar novo item do menu</h2>
 
-	<form class="formulario" aria-labelledby="form-title" (submit)="onSubmit($event)">
+	<form #menuForm class="formulario" aria-labelledby="form-title" (submit)="onSubmit($event)">
 		<div class="row-inline">
 			<div class="third">
 				<label for="categoria">Categoria</label>
@@ -31,8 +31,9 @@
 		</div>
 
 		<div class="form-actions">
-			<button type="submit" class="btn btn-primary">Salvar</button>
-			<button type="reset" class="btn btn-secondary">Limpar</button>
+			<button type="submit" class="btn btn-primary">{{ editingIndex !== null ? 'Salvar alterações' : 'Salvar' }}</button>
+			<button type="button" class="btn btn-secondary" (click)="onReset(menuForm)">Limpar</button>
+			<button *ngIf="editingIndex !== null" type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
 		</div>
 	</form>
 </section>

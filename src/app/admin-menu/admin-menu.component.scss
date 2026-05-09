@@ -5,12 +5,15 @@
 	display: flex;
 	flex-direction: column; /* garantir empilhamento: formulário acima da listagem */
 	gap: 1.25rem;
+	align-items: center;
 }
 
 /* Forçar formulário e lista a ocupar 100% do container (form acima da lista)
 	 mesmo em telas largas, conforme solicitado */
 menu-form, app-lista-menu {
 	width: 100%;
+	max-width: 900px;
 	display: block;
+	margin: 0 auto;
 }
 
