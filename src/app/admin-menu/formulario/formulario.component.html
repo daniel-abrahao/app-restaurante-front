@@ -1,0 +1,39 @@
+<section class="formulario-container">
+	<h2 id="form-title" class="formulario-title">Cadastrar novo item do menu</h2>
+
+	<form class="formulario" aria-labelledby="form-title" (submit)="onSubmit($event)">
+		<div class="grid">
+			<div class="field full">
+				<label for="nome">Nome do prato</label>
+				<input id="nome" name="nome" type="text" placeholder="Ex: Filé à parmegiana" required />
+			</div>
+
+			<div class="field half">
+				<label for="categoria">Categoria</label>
+				<select id="categoria" name="categoria" required>
+					<option value="">Selecione a categoria</option>
+					<option value="entrada">Entrada</option>
+					<option value="prato_principal">Prato principal</option>
+					<option value="sobremesa">Sobremesa</option>
+					<option value="bebida">Bebida</option>
+				</select>
+			</div>
+
+			<div class="field half">
+				<label for="valor">Valor (R$)</label>
+				<input id="valor" name="valor" type="number" step="0.01" min="0" placeholder="0,00" required />
+			</div>
+
+			<div class="field full">
+				<label for="ingredientes">Ingredientes</label>
+				<textarea id="ingredientes" name="ingredientes" rows="4" placeholder="Liste os principais ingredientes" required></textarea>
+			</div>
+		</div>
+
+		<div class="form-actions">
+			<button type="submit" class="btn btn-primary">Salvar</button>
+			<button type="reset" class="btn btn-secondary">Limpar</button>
+		</div>
+	</form>
+</section>
+

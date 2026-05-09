@@ -1,0 +1,24 @@
+<section class="lista-container">
+	<h2 class="lista-title">Itens do Menu</h2>
+
+	<div *ngIf="items.length === 0" class="empty">Nenhum item cadastrado.</div>
+
+	<ul class="lista" *ngIf="items.length > 0">
+		<li *ngFor="let item of items; let i = index" class="lista-item">
+			<div class="item-main">
+				<div class="item-name">{{ item.nome }}</div>
+				<!-- <div class="item-category">{{ formatCategoria(item.categoria) }}</div> -->
+			</div>
+
+			<div class="item-body">
+				<div class="item-ingredients">{{ item.ingredientes }}</div>
+				<!-- <div class="item-price">R$ {{ item.valor | number:'1.2-2' }}</div> -->
+			</div>
+
+			<div class="item-actions">
+				<!-- <button (click)="remove(i)" class="btn btn-danger">Remover</button> -->
+			</div>
+		</li>
+	</ul>
+</section>
+
