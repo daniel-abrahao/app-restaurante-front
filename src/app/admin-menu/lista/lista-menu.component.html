@@ -13,7 +13,7 @@
 	@if (items().length === 0) {
 		<div class="empty">Nenhum item cadastrado.</div>
 	} @else {
-		<p-table [value]="items()" responsiveLayout="scroll" [tableStyle]="{ 'min-width': '56rem' }">
+		<p-table [value]="sortedItems()" responsiveLayout="scroll" [tableStyle]="{ 'min-width': '56rem' }">
 			<ng-template pTemplate="header">
 				<tr>
 					<th>Categoria</th>
@@ -24,7 +24,7 @@
 					<th class="col-actions">Acoes</th>
 				</tr>
 			</ng-template>
-			<ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+			<ng-template pTemplate="body" let-item>
 				<tr>
 					<td>{{ formatCategoria(item.categoria) }}</td>
 					<td class="col-name">{{ item.nome }}</td>
@@ -44,7 +44,7 @@
 							icon="pi pi-pencil"
 							[text]="true"
 							aria-label="Editar {{ item.nome }}"
-							(click)="openEdit(rowIndex)"
+							(click)="openEdit(item)"
 						></button>
 						<button
 							type="button"
@@ -53,7 +53,7 @@
 							[text]="true"
 							severity="danger"
 							aria-label="Excluir {{ item.nome }}"
-							(click)="confirmDelete(rowIndex)"
+							(click)="confirmDelete(item)"
 						></button>
 					</td>
 				</tr>

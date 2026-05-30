@@ -29,6 +29,20 @@ export class ListaMenuComponent {
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly items = toSignal(this.menuService.items$, { initialValue: this.menuService.getAll() });
+  readonly categoryOrder = ['entrada', 'prato_principal', 'sobremesa', 'bebida'] as const;
+  private readonly categoryRank = this.categoryOrder.reduce<Record<string, number>>((acc, key, index) => {
+    acc[key] = index;
+    return acc;
+  }, {});
+  readonly sortedItems = computed(() => {
+    const list = this.items();
+    return [...list].sort((a, b) => {
+      const rankA = this.categoryRank[a.categoria] ?? 999;
+      const rankB = this.categoryRank[b.categoria] ?? 999;
+      if (rankA !== rankB) return rankA - rankB;
+      return a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' });
+    });
+  });
   readonly dialogVisible = signal(false);
   readonly activeIndex = signal<number | null>(null);
   readonly dialogTitle = computed(() =>
@@ -47,7 +61,9 @@ export class ListaMenuComponent {
     this.dialogVisible.set(true);
   }
 
-  openEdit(index: number): void {
+  openEdit(item: MenuItem): void {
+    const index = this.items().indexOf(item);
+    if (index < 0) return;
     this.activeIndex.set(index);
     this.dialogVisible.set(true);
   }
@@ -71,9 +87,9 @@ export class ListaMenuComponent {
     this.closeDialog();
   }
 
-  confirmDelete(index: number): void {
-    const item = this.items()[index];
-    if (!item) return;
+  confirmDelete(item: MenuItem): void {
+    const index = this.items().indexOf(item);
+    if (index < 0) return;
     this.confirmationService.confirm({
       message: `Deseja excluir o item "${item.nome}"?`,
       header: 'Confirmar exclusao',
