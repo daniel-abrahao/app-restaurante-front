@@ -1,0 +1,171 @@
+<section class="cliente-container">
+  <div class="cliente-header">
+    <h2 class="cliente-title">Clientes</h2>
+    <button type="button" pButton label="Novo cliente" icon="pi pi-plus" (click)="openCreate()"></button>
+  </div>
+
+  @if (items().length === 0) {
+    <div class="empty">Nenhum cliente cadastrado.</div>
+  } @else {
+    <p-table [value]="sortedItems()" responsiveLayout="scroll" [tableStyle]="{ 'min-width': '56rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>Telefone</th>
+          <th>Endereco</th>
+          <th>Referencia</th>
+          <th>Email</th>
+          <th>Observacoes</th>
+          <th class="col-actions">Acoes</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td class="col-name">{{ item.nome }}</td>
+          <td>{{ item.telefone }}</td>
+          <td>{{ formatEndereco(item) }}</td>
+          <td>
+            @if (item.referencia) {
+              {{ item.referencia }}
+            } @else {
+              <span class="muted">Sem referencia</span>
+            }
+          </td>
+          <td>
+            @if (item.email) {
+              {{ item.email }}
+            } @else {
+              <span class="muted">Sem email</span>
+            }
+          </td>
+          <td>
+            @if (item.observacoes) {
+              {{ item.observacoes }}
+            } @else {
+              <span class="muted">Sem observacoes</span>
+            }
+          </td>
+          <td class="col-actions">
+            <button
+              type="button"
+              pButton
+              icon="pi pi-pencil"
+              [text]="true"
+              aria-label="Editar {{ item.nome }}"
+              (click)="openEdit(item)"
+            ></button>
+            <button
+              type="button"
+              pButton
+              icon="pi pi-trash"
+              [text]="true"
+              severity="danger"
+              aria-label="Excluir {{ item.nome }}"
+              (click)="confirmDelete(item)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+
+  <p-dialog
+    [header]="dialogTitle()"
+    [visible]="dialogVisible()"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: 'min(720px, 96vw)' }"
+    (onHide)="closeDialog()"
+  >
+    <form class="cliente-form" [formGroup]="form" (ngSubmit)="submitForm()">
+      <div class="row-inline">
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" formControlName="nome" placeholder="Ex: Maria Lima" required />
+          @if (form.controls.nome.touched && form.controls.nome.invalid) {
+            <span class="error">Informe o nome.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="telefone">Telefone</label>
+          <input
+            id="telefone"
+            type="text"
+            formControlName="telefone"
+            placeholder="Ex: (11) 99999-99999"
+            inputmode="tel"
+            autocomplete="tel"
+            maxlength="15"
+            (input)="onTelefoneInput($event)"
+            required
+          />
+          @if (form.controls.telefone.touched && form.controls.telefone.invalid) {
+            <span class="error">Informe o telefone.</span>
+          }
+        </div>
+      </div>
+
+      <div class="row-inline">
+        <div class="field">
+          <label for="rua">Rua</label>
+          <input id="rua" type="text" formControlName="rua" placeholder="Ex: Rua das Flores" required />
+          @if (form.controls.rua.touched && form.controls.rua.invalid) {
+            <span class="error">Informe a rua.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="numero">Numero</label>
+          <input id="numero" type="text" formControlName="numero" placeholder="Ex: 123 ou N/A" required />
+          @if (form.controls.numero.touched && form.controls.numero.invalid) {
+            <span class="error">Informe o numero.</span>
+          }
+        </div>
+      </div>
+
+      <div class="row-inline">
+        <div class="field">
+          <label for="bairro">Bairro</label>
+          <input id="bairro" type="text" formControlName="bairro" placeholder="Ex: Centro" required />
+          @if (form.controls.bairro.touched && form.controls.bairro.invalid) {
+            <span class="error">Informe o bairro.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="complemento">Complemento</label>
+          <input id="complemento" type="text" formControlName="complemento" placeholder="Ex: Apto 12" />
+        </div>
+      </div>
+
+      <div class="row-inline">
+        <div class="field">
+          <label for="referencia">Referencia</label>
+          <input id="referencia" type="text" formControlName="referencia" placeholder="Ex: Proximo ao mercado" />
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" formControlName="email" placeholder="Ex: cliente@email.com" />
+          @if (form.controls.email.touched && form.controls.email.invalid) {
+            <span class="error">Informe um email valido.</span>
+          }
+        </div>
+      </div>
+
+      <div class="field full">
+        <label for="observacoes">Observacoes</label>
+        <textarea id="observacoes" formControlName="observacoes" rows="3" placeholder="Preferencias, alergias, observacoes adicionais"></textarea>
+      </div>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <button type="button" pButton label="Cancelar" [text]="true" (click)="closeDialog()"></button>
+      <button type="button" pButton label="Salvar" (click)="submitForm()"></button>
+    </ng-template>
+  </p-dialog>
+
+  <p-confirmDialog></p-confirmDialog>
+</section>

@@ -1,4 +1,4 @@
-.garcon-container {
+.cliente-container {
   width: 100%;
   min-width: 1000px;
   max-width: 1100px;
@@ -8,7 +8,7 @@
   gap: 1rem;
 }
 
-.garcon-header {
+.cliente-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,7 +16,7 @@
   flex-wrap: wrap;
 }
 
-.garcon-title {
+.cliente-title {
   font-size: 1.25rem;
   margin: 0;
 }
@@ -39,20 +39,12 @@
   white-space: nowrap;
 }
 
-.thumb {
-  width: 56px;
-  height: 56px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #e6e9ee;
-}
-
 .muted {
   color: #94a3b8 !important;
   font-style: italic;
 }
 
-.garcon-form {
+.cliente-form {
   display: grid;
   gap: 1rem;
 }
@@ -79,7 +71,8 @@ label {
 }
 
 input[type="text"],
-input[type="file"] {
+input[type="email"],
+textarea {
   padding: 0.6rem 0.75rem;
   border: 1px solid #e6e9ee;
   border-radius: 10px;
@@ -88,56 +81,14 @@ input[type="file"] {
   background: #fbfdff;
 }
 
-input[type="file"] {
-  padding: 0.4rem 0.5rem;
-  background: transparent;
-}
-
-input:focus {
+input:focus,
+textarea:focus {
   border-color: var(--olive-600);
   box-shadow: 0 6px 20px rgba(138, 169, 107, 0.12);
 }
 
-.image-preview {
-  margin-top: 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.image-preview img {
-  width: 88px;
-  height: 88px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #e6e9ee;
-}
-
-.btn-clear {
-  padding: 0.45rem 0.75rem;
-  border-radius: 8px;
-  border: 1px solid #e6e9ee;
-  background: #fff;
-  color: #374151;
-  cursor: pointer;
-}
-
-.folgas-field {
-  border: 1px solid #e6e9ee;
-  border-radius: 12px;
-  padding: 0.75rem 1rem 1rem;
-}
-
-.folgas-field legend {
-  padding: 0 0.35rem;
-  font-weight: 700;
-  color: #1f2937;
-}
-
-.toggle-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+textarea {
+  resize: vertical;
 }
 
 .error {
