@@ -68,20 +68,6 @@ Esse comando recompila a aplicação automaticamente durante o desenvolvimento.
 npm run test
 ```
 
-## Estrutura do projeto
-
-```text
-src/
-  app/
-	app.config.ts
-	app.routes.ts
-	app.ts
-	app.html
-	app.scss
-  main.ts
-  styles.scss
-```
-
 ## Observações importantes
 
 - Este projeto é o **front-end** do trabalho da disciplina.
