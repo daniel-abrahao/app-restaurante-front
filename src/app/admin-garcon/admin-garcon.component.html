@@ -1,0 +1,120 @@
+<section class="garcon-container">
+  <div class="garcon-header">
+    <h2 class="garcon-title">Garçons</h2>
+    <button type="button" pButton label="Novo garçon" icon="pi pi-plus" (click)="openCreate()"></button>
+  </div>
+
+  @if (items().length === 0) {
+    <div class="empty">Nenhum garçon cadastrado.</div>
+  } @else {
+    <p-table [value]="sortedItems()" responsiveLayout="scroll" [tableStyle]="{ 'min-width': '52rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nome</th>
+          <th>Documento</th>
+          <th>Folgas</th>
+          <th>Foto</th>
+          <th class="col-actions">Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-item>
+        <tr>
+          <td class="col-name">{{ item.nome }}</td>
+          <td>{{ item.documento }}</td>
+          <td>{{ formatFolgas(item.folgas) }}</td>
+          <td>
+            @if (item.fotoDataUrl) {
+              <img class="thumb" [src]="item.fotoDataUrl" [alt]="'Foto de ' + item.nome" />
+            } @else {
+              <span class="muted">Sem foto</span>
+            }
+          </td>
+          <td class="col-actions">
+            <button
+              type="button"
+              pButton
+              icon="pi pi-pencil"
+              [text]="true"
+              aria-label="Editar {{ item.nome }}"
+              (click)="openEdit(item)"
+            ></button>
+            <button
+              type="button"
+              pButton
+              icon="pi pi-trash"
+              [text]="true"
+              severity="danger"
+              aria-label="Excluir {{ item.nome }}"
+              (click)="confirmDelete(item)"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+
+  <p-dialog
+    [header]="dialogTitle()"
+    [visible]="dialogVisible()"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [style]="{ width: 'min(720px, 96vw)' }"
+    (onHide)="closeDialog()"
+  >
+    <form class="garcon-form" [formGroup]="form" (ngSubmit)="submitForm()">
+      <div class="row-inline">
+        <div class="field">
+          <label for="nome">Nome</label>
+          <input id="nome" type="text" formControlName="nome" placeholder="Ex: Ana Lima" required />
+          @if (form.controls.nome.touched && form.controls.nome.invalid) {
+            <span class="error">Informe o nome.</span>
+          }
+        </div>
+
+        <div class="field">
+          <label for="documento">Documento</label>
+          <input id="documento" type="text" formControlName="documento" placeholder="Ex: CPF ou RG" required />
+          @if (form.controls.documento.touched && form.controls.documento.invalid) {
+            <span class="error">Informe o documento.</span>
+          }
+        </div>
+      </div>
+
+      <div class="field full image-field">
+        <label for="foto">Foto</label>
+        <input #imageInput id="foto" type="file" accept="image/*" (change)="onImageSelected($event)" />
+        @if (form.controls.fotoDataUrl.value) {
+          <div class="image-preview">
+            <img [src]="form.controls.fotoDataUrl.value" alt="Preview da foto" />
+            <button type="button" class="btn-clear" (click)="clearImage()">Remover foto</button>
+          </div>
+        }
+      </div>
+
+      <fieldset class="field full folgas-field" formGroupName="folgas">
+        <legend>Dias de folga</legend>
+        <div class="toggle-grid">
+          @for (day of weekdays; track day.key) {
+            <p-toggleButton
+              [formControlName]="day.key"
+              [onLabel]="day.label"
+              [offLabel]="day.label"
+              onIcon="pi pi-check"
+              offIcon="pi pi-times"
+              styleClass="folga-toggle"
+              [attr.aria-label]="day.full"
+            ></p-toggleButton>
+          }
+        </div>
+      </fieldset>
+    </form>
+
+    <ng-template pTemplate="footer">
+      <button type="button" pButton label="Cancelar" [text]="true" (click)="closeDialog()"></button>
+      <button type="button" pButton label="Salvar" (click)="submitForm()"></button>
+    </ng-template>
+  </p-dialog>
+
+  <p-confirmDialog></p-confirmDialog>
+</section>
