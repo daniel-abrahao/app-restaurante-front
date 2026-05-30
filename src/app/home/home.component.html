@@ -1,26 +1,26 @@
-<section class="p-card hero-card">
-    <div class="p-card-body">
-      <p class="hero__eyebrow">Restaurante</p>
-      <h1 id="home-title" class="p-card-title">Gerencie seu cardápio com simplicidade</h1>
-      <p class="p-card-content hero__description">
-        Organize itens do cardápio por nome, categoria, preço, descrição e disponibilidade em um único lugar.
-      </p>
-      <div class="hero__actions">
-        <a class="btn btn-primary hero-cta" routerLink="/login" aria-label="Ir para tela de login">
-          Começar agora
-        </a>
+<section class="hero">
+  <img class="hero__image" src="/imgs/image-back.jpeg" alt="" aria-hidden="true" />
+  <div class="hero__overlay"></div>
+  <div class="hero__content">
+    <p class="hero__eyebrow">Gestor de Restaurante</p>
+    <h1 id="home-title" class="hero__title">Controle total do seu restaurante, com um painel claro</h1>
+    <p class="hero__lead">
+      Uma base simples para organizar cardapio, equipe e clientes. Visual moderno, dados objetivos e foco no que importa no dia a dia.
+    </p>
 
-        <a class="btn btn-outline hero-admin" routerLink="/menu" aria-label="Ir para administração do cardápio">
-          Editar cardápio
-        </a>
+    <div class="hero__pills">
+      <span class="hero__pill">Cardapio</span>
+      <span class="hero__pill">Garcons</span>
+      <span class="hero__pill">Clientes</span>
     </div>
-    </div>
-      <div class="hero-links">
-        <a routerLink="/menu" class="link">Ver cardápio</a>
-        <a routerLink="/" fragment="home-title" class="link">Ir para a seção</a>
-      </div>
-      <div class="hero-right">
-        <img src="/images/hero-illustration.svg" alt="Ilustração de pratos" class="hero-image" />
-      </div>
+
+    <ul class="hero__list">
+      <li>Fotos e precos organizados por categoria e nome.</li>
+      <li>Cadastro rapido para garcons e clientes.</li>
+      <li>Dados salvos localmente enquanto o back-end nao chega.</li>
+    </ul>
+
+    <p class="hero__footnote">Sem login por enquanto. Experiencia direta e objetiva.</p>
+  </div>
 </section>
 

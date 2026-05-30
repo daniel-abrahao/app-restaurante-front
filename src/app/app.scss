@@ -35,8 +35,7 @@ main {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: calc($header-height + 1rem) 1rem 2rem 1rem; /* compensar header fixo */
-  background: linear-gradient(160deg, var(--olive-50) 0%, #ffffff 60%);
+  padding: 64px 1rem 0rem 1rem;
 }
 
 footer {
