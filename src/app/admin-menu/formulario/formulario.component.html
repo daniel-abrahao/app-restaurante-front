@@ -1,40 +1,52 @@
-<section class="formulario-container">
-	<h2 id="form-title" class="formulario-title">Cadastrar novo item do menu</h2>
-
-	<form #menuForm class="formulario" aria-labelledby="form-title" (submit)="onSubmit($event)">
-		<div class="row-inline">
-			<div class="third">
-				<label for="categoria">Categoria</label>
-				<select id="categoria" name="categoria" required>
-					<option value="">Selecione a categoria</option>
-					<option value="entrada">Entrada</option>
-					<option value="prato_principal">Prato principal</option>
-					<option value="sobremesa">Sobremesa</option>
-					<option value="bebida">Bebida</option>
-				</select>
-			</div>
-
-			<div class="third">
-				<label for="nome">Nome do prato</label>
-				<input id="nome" name="nome" type="text" placeholder="Ex: Filé à parmegiana" required />
-			</div>
-
-			<div class="third">
-				<label for="valor">Valor (R$)</label>
-				<input id="valor" name="valor" type="number" step="0.01" min="0" placeholder="0,00" required />
-			</div>
+<form class="formulario" [formGroup]="form" (ngSubmit)="submitFromParent()">
+	<div class="row-inline">
+		<div class="third">
+			<label for="categoria">Categoria</label>
+			<select id="categoria" formControlName="categoria" required>
+				<option value="">Selecione a categoria</option>
+				@for (cat of categories; track cat.value) {
+					<option [value]="cat.value">{{ cat.label }}</option>
+				}
+			</select>
+			@if (form.controls.categoria.touched && form.controls.categoria.invalid) {
+				<span class="error">Informe a categoria.</span>
+			}
 		</div>
 
-		<div class="field full ingredients-field">
-			<label for="ingredientes">Ingredientes</label>
-			<textarea id="ingredientes" name="ingredientes" rows="4" placeholder="Liste os principais ingredientes" required></textarea>
+		<div class="third">
+			<label for="nome">Nome do prato</label>
+			<input id="nome" formControlName="nome" type="text" placeholder="Ex: File a parmegiana" required />
+			@if (form.controls.nome.touched && form.controls.nome.invalid) {
+				<span class="error">Informe o nome.</span>
+			}
 		</div>
 
-		<div class="form-actions">
-			<button type="submit" class="btn btn-primary">{{ editingIndex !== null ? 'Salvar alterações' : 'Salvar' }}</button>
-			<button type="button" class="btn btn-secondary" (click)="onReset(menuForm)">Limpar</button>
-			<button *ngIf="editingIndex !== null" type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancelar</button>
+		<div class="third">
+			<label for="valor">Valor (R$)</label>
+			<input id="valor" formControlName="valor" type="number" step="0.01" min="0" placeholder="0,00" required />
+			@if (form.controls.valor.touched && form.controls.valor.invalid) {
+				<span class="error">Informe um valor valido.</span>
+			}
 		</div>
-	</form>
-</section>
+	</div>
+
+	<div class="field full ingredients-field">
+		<label for="ingredientes">Ingredientes</label>
+		<textarea id="ingredientes" formControlName="ingredientes" rows="4" placeholder="Liste os principais ingredientes" required></textarea>
+		@if (form.controls.ingredientes.touched && form.controls.ingredientes.invalid) {
+			<span class="error">Informe os ingredientes.</span>
+		}
+	</div>
+
+	<div class="field full image-field">
+		<label for="imagem">Imagem</label>
+		<input #imageInput id="imagem" type="file" accept="image/*" (change)="onImageSelected($event)" />
+		@if (form.controls.imagemDataUrl.value) {
+			<div class="image-preview">
+				<img [src]="form.controls.imagemDataUrl.value" alt="Preview da imagem" />
+				<button type="button" class="btn-clear" (click)="clearImage()">Remover imagem</button>
+			</div>
+		}
+	</div>
+</form>
 

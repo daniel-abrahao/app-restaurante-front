@@ -1,52 +1,82 @@
 <section class="lista-container">
-	<h2 class="lista-title">Itens do Menu</h2>
+	<div class="lista-header">
+		<h2 class="lista-title">Itens do menu</h2>
+		<button
+			type="button"
+			pButton
+			label="Novo item"
+			icon="pi pi-plus"
+			(click)="openCreate()"
+		></button>
+	</div>
 
-	<div *ngIf="items.length === 0" class="empty">Nenhum item cadastrado.</div>
+	@if (items().length === 0) {
+		<div class="empty">Nenhum item cadastrado.</div>
+	} @else {
+		<p-table [value]="items()" responsiveLayout="scroll" [tableStyle]="{ 'min-width': '56rem' }">
+			<ng-template pTemplate="header">
+				<tr>
+					<th>Categoria</th>
+					<th>Nome</th>
+					<th>Ingredientes</th>
+					<th>Valor</th>
+					<th>Imagem</th>
+					<th class="col-actions">Acoes</th>
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-item let-rowIndex="rowIndex">
+				<tr>
+					<td>{{ formatCategoria(item.categoria) }}</td>
+					<td class="col-name">{{ item.nome }}</td>
+					<td class="col-ingred">{{ item.ingredientes }}</td>
+					<td class="col-valor">R$ {{ item.valor | number:'1.2-2' }}</td>
+					<td>
+						@if (item.imagemDataUrl) {
+							<img class="thumb" [src]="item.imagemDataUrl" [alt]="'Foto de ' + item.nome" />
+						} @else {
+							<span class="muted">Sem imagem</span>
+						}
+					</td>
+					<td class="col-actions">
+						<button
+							type="button"
+							pButton
+							icon="pi pi-pencil"
+							[text]="true"
+							aria-label="Editar {{ item.nome }}"
+							(click)="openEdit(rowIndex)"
+						></button>
+						<button
+							type="button"
+							pButton
+							icon="pi pi-trash"
+							[text]="true"
+							severity="danger"
+							aria-label="Excluir {{ item.nome }}"
+							(click)="confirmDelete(rowIndex)"
+						></button>
+					</td>
+				</tr>
+			</ng-template>
+		</p-table>
+	}
 
-	<ng-container *ngIf="items.length > 0">
-		<nav class="tabs" role="tablist" aria-label="Categorias">
-			<button *ngFor="let c of categories"
-				class="tab" [class.active]="activeTab===c"
-				type="button" (click)="setTab(c)">
-				{{ formatCategoria(c) }} ({{ itemsByCategory(c).length }})
-			</button>
-		</nav>
+	<p-dialog
+		[header]="dialogTitle()"
+		[visible]="dialogVisible()"
+		[modal]="true"
+		[draggable]="false"
+		[resizable]="false"
+		[style]="{ width: 'min(720px, 96vw)' }"
+		(onHide)="closeDialog()"
+	>
+		<menu-form [item]="activeItem()" (formSubmit)="handleSave($event)"></menu-form>
+		<ng-template pTemplate="footer">
+			<button type="button" pButton label="Cancelar" [text]="true" (click)="closeDialog()"></button>
+			<button type="button" pButton label="Salvar" (click)="submitForm()"></button>
+		</ng-template>
+	</p-dialog>
 
-		<section class="tab-panel">
-			<table class="menu-table" *ngFor="let c of categories" [hidden]="activeTab!==c">
-				<thead>
-					<tr>
-						<th>Nome</th>
-						<th>Ingredientes</th>
-						<th>Valor</th>
-						<th>Ações</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr *ngFor="let item of itemsByCategory(c); let i = index">
-						<td class="col-name">{{ item.nome }}</td>
-						<td class="col-ingred">{{ item.ingredientes }}</td>
-						<td class="col-valor">R$ {{ item.valor | number:'1.2-2' }}</td>
-							<td class="col-actions">
-									<button (click)="removeItem(item)" class="btn btn-icon" aria-label="Remover {{ item.nome }}">
-									<svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-										<path d="M3 6h18" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-										<path d="M8 6v14a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-										<path d="M10 11v6M14 11v6" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-										<path d="M9 6l1-2h4l1 2" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-									</svg>
-								</button>
-								<button (click)="menuService.startEdit(getGlobalIndex(c, item))" class="btn btn-secondary" aria-label="Editar {{ item.nome }}">
-									✎
-								</button>
-							</td>
-					</tr>
-					<tr *ngIf="itemsByCategory(c).length === 0">
-						<td colspan="4" class="empty-row">Nenhum item nesta categoria.</td>
-					</tr>
-				</tbody>
-			</table>
-		</section>
-	</ng-container>
+	<p-confirmDialog></p-confirmDialog>
 </section>
 

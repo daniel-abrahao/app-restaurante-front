@@ -6,6 +6,7 @@ export interface MenuItem {
   nome: string;
   ingredientes: string;
   valor: number;
+  imagemDataUrl?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -13,8 +14,6 @@ export class MenuService {
   private readonly storageKey = 'menuItems';
   private itemsSubject = new BehaviorSubject<MenuItem[]>(this.loadFromStorage());
   readonly items$ = this.itemsSubject.asObservable();
-  private editingSubject = new BehaviorSubject<{ index: number | null; item: MenuItem } | null>(null);
-  readonly editing$ = this.editingSubject.asObservable();
 
   private loadFromStorage(): MenuItem[] {
     try {
@@ -50,17 +49,6 @@ export class MenuService {
       this.itemsSubject.next(items);
       this.saveToStorage(items);
     }
-  }
-
-  startEdit(index: number): void {
-    const items = this.getAll();
-    if (index >= 0 && index < items.length) {
-      this.editingSubject.next({ index, item: items[index] });
-    }
-  }
-
-  clearEdit(): void {
-    this.editingSubject.next(null);
   }
 
   remove(index: number): void {

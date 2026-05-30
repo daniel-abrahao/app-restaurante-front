@@ -1,82 +1,122 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild, ElementRef, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { MenuService, MenuItem } from '../menu.service';
+import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, input, output, viewChild } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MenuItem } from '../menu.service';
 
 @Component({
   selector: 'menu-form',
-  imports: [RouterLink],
+  imports: [ReactiveFormsModule],
   templateUrl: './formulario.component.html',
   styleUrls: ['./formulario.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormularioComponent implements OnInit, OnDestroy {
-  private menuService = inject(MenuService);
-  private sub: Subscription | null = null;
-  editingIndex: number | null = null;
+export class FormularioComponent {
+  readonly item = input<MenuItem | null>(null);
+  readonly formSubmit = output<MenuItem>();
 
-  @ViewChild('menuForm') menuFormRef!: ElementRef<HTMLFormElement>;
+  private readonly fb = inject(FormBuilder);
 
-  ngOnInit(): void {
-    this.sub = this.menuService.editing$.subscribe(state => {
-      if (state && state.index !== null && state.item) {
-        this.editingIndex = state.index;
-        // populate form when view is ready
-        setTimeout(() => this.populateForm(state.item));
-      } else {
-        this.editingIndex = null;
-      }
+  readonly categories = [
+    { value: 'entrada', label: 'Entrada' },
+    { value: 'prato_principal', label: 'Prato principal' },
+    { value: 'sobremesa', label: 'Sobremesa' },
+    { value: 'bebida', label: 'Bebida' },
+  ];
+
+  readonly form = this.fb.group({
+    categoria: ['', Validators.required],
+    nome: ['', Validators.required],
+    ingredientes: ['', Validators.required],
+    valor: [0, [Validators.required, Validators.min(0)]],
+    imagemDataUrl: [null as string | null],
+  });
+
+  constructor() {
+    effect(() => {
+      const current = this.item();
+      this.resetForm(current);
     });
   }
 
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
+  readonly imageInput = viewChild<ElementRef<HTMLInputElement>>('imageInput');
+
+  resetForCreate(): void {
+    this.resetForm(null);
   }
 
-  populateForm(item: MenuItem): void {
-    const form = this.menuFormRef?.nativeElement;
-    if (!form) return;
-    (form.elements.namedItem('categoria') as HTMLSelectElement).value = item.categoria || '';
-    (form.elements.namedItem('nome') as HTMLInputElement).value = item.nome || '';
-    (form.elements.namedItem('ingredientes') as HTMLTextAreaElement).value = item.ingredientes || '';
-    (form.elements.namedItem('valor') as HTMLInputElement).value = String(item.valor ?? '');
-  }
-
-  onSubmit(event: Event): void {
-    event.preventDefault();
-    const form = this.menuFormRef.nativeElement;
-    const fd = new FormData(form);
-
-    const item: MenuItem = {
-      categoria: String(fd.get('categoria') || '').trim(),
-      nome: String(fd.get('nome') || '').trim(),
-      ingredientes: String(fd.get('ingredientes') || '').trim(),
-      valor: parseFloat(String(fd.get('valor') || '0')) || 0,
-    };
-
-    if (!item.categoria || !item.nome) {
+  submitFromParent(): void {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
       return;
     }
 
-    if (this.editingIndex !== null) {
-      this.menuService.update(this.editingIndex, item);
-      this.menuService.clearEdit();
-    } else {
-      this.menuService.add(item);
+    const raw = this.form.getRawValue();
+    const item: MenuItem = {
+      categoria: raw.categoria?.trim() ?? '',
+      nome: raw.nome?.trim() ?? '',
+      ingredientes: raw.ingredientes?.trim() ?? '',
+      valor: Number(raw.valor) || 0,
+      imagemDataUrl: raw.imagemDataUrl ?? null,
+    };
+
+    if (!item.categoria || !item.nome) {
+      this.form.markAllAsTouched();
+      return;
     }
 
-    form.reset();
-    this.editingIndex = null;
+    this.formSubmit.emit(item);
   }
 
-  onReset(formRef: HTMLFormElement | any): void {
-    if (formRef && formRef.reset) formRef.reset();
-    this.menuService.clearEdit();
-    this.editingIndex = null;
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const file = input?.files?.[0];
+    if (!file) {
+      this.form.controls.imagemDataUrl.setValue(null);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : null;
+      this.form.controls.imagemDataUrl.setValue(result);
+    };
+    reader.readAsDataURL(file);
   }
 
-  cancelEdit(): void {
-    this.menuService.clearEdit();
-    this.menuFormRef.nativeElement.reset();
-    this.editingIndex = null;
+  clearImage(): void {
+    this.form.controls.imagemDataUrl.setValue(null);
+    this.clearFileInput();
+  }
+
+  private resetForm(item: MenuItem | null): void {
+    if (item) {
+      this.form.reset(
+        {
+          categoria: item.categoria ?? '',
+          nome: item.nome ?? '',
+          ingredientes: item.ingredientes ?? '',
+          valor: item.valor ?? 0,
+          imagemDataUrl: item.imagemDataUrl ?? null,
+        },
+        { emitEvent: false }
+      );
+      return;
+    }
+
+    this.form.reset(
+      {
+        categoria: '',
+        nome: '',
+        ingredientes: '',
+        valor: 0,
+        imagemDataUrl: null,
+      },
+      { emitEvent: false }
+    );
+    this.clearFileInput();
+  }
+
+  private clearFileInput(): void {
+    const input = this.imageInput()?.nativeElement;
+    if (input) input.value = '';
   }
 }

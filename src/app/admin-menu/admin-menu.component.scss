@@ -1,19 +1,11 @@
-/* Container principal do admin: usa 80% da largura da tela e centraliza */
 .admin-container {
-	width: 80%;
+	width: min(1100px, 92vw);
 	margin: 1.5rem auto;
-	display: flex;
-	flex-direction: column; /* garantir empilhamento: formulário acima da listagem */
-	gap: 1.25rem;
-	align-items: center;
+	display: block;
 }
 
-/* Forçar formulário e lista a ocupar 100% do container (form acima da lista)
-	 mesmo em telas largas, conforme solicitado */
-menu-form, app-lista-menu {
+app-lista-menu {
 	width: 100%;
-	max-width: 900px;
 	display: block;
-	margin: 0 auto;
 }
 

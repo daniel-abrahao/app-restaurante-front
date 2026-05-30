@@ -1,32 +1,87 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { NgFor, DecimalPipe, NgIf } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ConfirmationService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
 import { MenuService, MenuItem } from '../menu.service';
+import { FormularioComponent } from '../formulario/formulario.component';
 
 @Component({
   selector: 'app-lista-menu',
   templateUrl: './lista-menu.component.html',
-  imports: [NgFor, NgIf, DecimalPipe],
-  styleUrls: ['./lista-menu.component.scss']
+  imports: [
+    DecimalPipe,
+    TableModule,
+    ButtonModule,
+    DialogModule,
+    ConfirmDialogModule,
+    FormularioComponent,
+  ],
+  styleUrls: ['./lista-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [ConfirmationService],
 })
-export class ListaMenuComponent implements OnInit, OnDestroy {
-  menuService = inject(MenuService);
-  items: MenuItem[] = [];
-  private sub: Subscription | null = null;
-  categories = ['entrada', 'prato_principal', 'sobremesa', 'bebida'];
-  activeTab: string = this.categories[0];
+export class ListaMenuComponent {
+  private readonly menuService = inject(MenuService);
+  private readonly confirmationService = inject(ConfirmationService);
 
-  ngOnInit(): void {
-    this.items = this.menuService.getAll();
-    this.sub = this.menuService.items$.subscribe(list => this.items = list);
+  readonly items = toSignal(this.menuService.items$, { initialValue: this.menuService.getAll() });
+  readonly dialogVisible = signal(false);
+  readonly activeIndex = signal<number | null>(null);
+  readonly dialogTitle = computed(() =>
+    this.activeIndex() === null ? 'Novo item do menu' : 'Editar item do menu'
+  );
+  readonly activeItem = computed<MenuItem | null>(() => {
+    const index = this.activeIndex();
+    return index === null ? null : this.items()[index] ?? null;
+  });
+
+  readonly formComponent = viewChild(FormularioComponent);
+
+  openCreate(): void {
+    this.activeIndex.set(null);
+    this.formComponent()?.resetForCreate();
+    this.dialogVisible.set(true);
   }
 
-  ngOnDestroy(): void {
-    this.sub?.unsubscribe();
+  openEdit(index: number): void {
+    this.activeIndex.set(index);
+    this.dialogVisible.set(true);
   }
 
-  remove(index: number): void {
-    this.menuService.remove(index);
+  closeDialog(): void {
+    this.dialogVisible.set(false);
+    this.activeIndex.set(null);
+  }
+
+  submitForm(): void {
+    this.formComponent()?.submitFromParent();
+  }
+
+  handleSave(item: MenuItem): void {
+    const index = this.activeIndex();
+    if (index === null) {
+      this.menuService.add(item);
+    } else {
+      this.menuService.update(index, item);
+    }
+    this.closeDialog();
+  }
+
+  confirmDelete(index: number): void {
+    const item = this.items()[index];
+    if (!item) return;
+    this.confirmationService.confirm({
+      message: `Deseja excluir o item "${item.nome}"?`,
+      header: 'Confirmar exclusao',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Excluir',
+      rejectLabel: 'Cancelar',
+      accept: () => this.menuService.remove(index),
+    });
   }
 
   formatCategoria(key: string): string {
@@ -39,21 +94,4 @@ export class ListaMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  itemsByCategory(cat: string): MenuItem[] {
-    return this.items.filter(i => i.categoria === cat);
-  }
-
-  setTab(cat: string): void {
-    this.activeTab = cat;
-  }
-
-  removeItem(item: MenuItem): void {
-    const idx = this.items.indexOf(item);
-    if (idx >= 0) this.menuService.remove(idx);
-  }
-
-  getGlobalIndex(category: string, item: MenuItem): number {
-    // find index in global items array matching the reference
-    return this.items.findIndex(i => i === item);
-  }
 }
