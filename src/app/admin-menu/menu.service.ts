@@ -94,12 +94,9 @@ export class MenuService {
 
     this.http
       .delete<unknown>(this.endpoint(`/${current.id}`))
-      .pipe(catchError(() => of(false)))
-      .subscribe(success => {
-        if (!success) return;
-        const items = this.getAll().slice();
-        items.splice(index, 1);
-        this.itemsSubject.next(items);
+      .subscribe({
+        next: () => this.refresh(),
+        error: () => {},
       });
   }
 
