@@ -23,9 +23,9 @@
 
 		<div class="third">
 			<label for="valor">Valor (R$)</label>
-			<input id="valor" formControlName="valor" type="number" step="0.01" min="0" placeholder="0,00" required />
+			<input id="valor" formControlName="valor" type="number" step="0.01" min="0.01" placeholder="0,00" required />
 			@if (form.controls.valor.touched && form.controls.valor.invalid) {
-				<span class="error">Informe um valor valido.</span>
+				<span class="error">Informe um valor maior que 0.</span>
 			}
 		</div>
 	</div>

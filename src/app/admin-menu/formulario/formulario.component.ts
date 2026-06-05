@@ -26,7 +26,7 @@ export class FormularioComponent {
     categoria: ['', Validators.required],
     nome: ['', Validators.required],
     ingredientes: ['', Validators.required],
-    valor: [0, [Validators.required, Validators.min(0)]],
+    valor: [0, [Validators.required, Validators.min(0.01)]],
     imagemDataUrl: [null as string | null],
   });
 
