@@ -5,6 +5,8 @@ import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { PaginatorModule } from 'primeng/paginator';
+import type { PaginatorState } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { ClienteService, Cliente } from './cliente.service';
 
@@ -16,6 +18,7 @@ import { ClienteService, Cliente } from './cliente.service';
     ButtonModule,
     DialogModule,
     ConfirmDialogModule,
+    PaginatorModule,
   ],
   templateUrl: './admin-cliente.component.html',
   styleUrl: './admin-cliente.component.scss',
@@ -28,6 +31,13 @@ export class AdminClienteComponent {
   private readonly fb = inject(FormBuilder).nonNullable;
 
   readonly items = toSignal(this.service.items$, { initialValue: this.service.getAll() });
+  readonly totalRecords = toSignal(this.service.totalRecords$, {
+    initialValue: this.service.getTotalRecords(),
+  });
+  readonly currentPage = toSignal(this.service.currentPage$, {
+    initialValue: this.service.getCurrentPage(),
+  });
+  readonly pageSize = this.service.pageSize;
   readonly sortedItems = computed(() =>
     [...this.items()].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' }))
   );
@@ -119,6 +129,10 @@ export class AdminClienteComponent {
       rejectLabel: 'Cancelar',
       accept: () => this.service.remove(index),
     });
+  }
+
+  onPageChange(event: PaginatorState): void {
+    this.service.loadPage(event.page ?? 0);
   }
 
   private resetForm(item: Cliente | null): void {

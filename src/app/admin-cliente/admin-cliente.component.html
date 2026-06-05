@@ -67,6 +67,14 @@
         </tr>
       </ng-template>
     </p-table>
+
+    <p-paginator
+      [first]="currentPage() * pageSize"
+      [rows]="pageSize"
+      [totalRecords]="totalRecords()"
+      [rowsPerPageOptions]="[pageSize]"
+      (onPageChange)="onPageChange($event)"
+    ></p-paginator>
   }
 
   <p-dialog

@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { catchError, map, of } from 'rxjs';
+import { HttpHeaders } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 
@@ -19,7 +20,13 @@ export class MenuService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = environment.apiUrl.replace(/\/$/, '');
   private itemsSubject = new BehaviorSubject<MenuItem[]>([]);
+  private totalRecordsSubject = new BehaviorSubject<number>(0);
+  private currentPageSubject = new BehaviorSubject<number>(0);
+  private currentPage = 0;
   readonly items$ = this.itemsSubject.asObservable();
+  readonly totalRecords$ = this.totalRecordsSubject.asObservable();
+  readonly currentPage$ = this.currentPageSubject.asObservable();
+  readonly pageSize = 20;
 
   constructor() {
     this.refresh();
@@ -29,14 +36,25 @@ export class MenuService {
     return `${this.apiUrl}/cardapio${path}`;
   }
 
-  private refresh(): void {
+  refresh(page = this.currentPage): void {
+    this.currentPage = page;
     this.http
-      .get<unknown>(this.endpoint(), { params: this.listParams() })
+      .get<unknown>(this.endpoint(), { params: this.listParams(page), observe: 'response' })
       .pipe(
-        map(response => this.normalizeCollection(response)),
-        catchError(() => of(this.getAll()))
+        map(response => this.normalizeCollectionResponse(response.body, response.headers)),
+        catchError(() =>
+          of({
+            items: this.getAll(),
+            totalRecords: this.totalRecordsSubject.getValue(),
+            currentPage: this.currentPageSubject.getValue(),
+          })
+        )
       )
-      .subscribe(items => this.itemsSubject.next(items));
+      .subscribe(result => {
+        this.totalRecordsSubject.next(result.totalRecords);
+        this.currentPageSubject.next(result.currentPage);
+        this.itemsSubject.next(result.items);
+      });
   }
 
   getAll(): MenuItem[] {
@@ -100,19 +118,42 @@ export class MenuService {
       });
   }
 
-  private listParams(): HttpParams {
+  loadPage(page: number): void {
+    this.refresh(page);
+  }
+
+  getTotalRecords(): number {
+    return this.totalRecordsSubject.getValue();
+  }
+
+  getCurrentPage(): number {
+    return this.currentPageSubject.getValue();
+  }
+
+  private listParams(page: number): HttpParams {
     return new HttpParams()
       .set('order', 'asc')
-      .set('page', '0')
-      .set('pageSize', '1000')
+      .set('page', String(page))
+      .set('pageSize', '10')
       .set('sort', 'nome');
   }
 
-  private normalizeCollection(response: unknown): MenuItem[] {
+  private normalizeCollectionResponse(
+    response: unknown,
+    headers: HttpHeaders
+  ): { items: MenuItem[]; totalRecords: number; currentPage: number } {
+    const totalRecords = this.readNumber(headers.get('X-Paging-Total-Count'));
+    const currentPage = this.readNumber(headers.get('X-Paging-Current-Page'));
+
     if (Array.isArray(response)) {
-      return response
+      const items = response
         .map(item => this.normalizeItem(item, null))
         .filter((item): item is MenuItem => item !== null);
+      return {
+        items,
+        totalRecords: totalRecords ?? items.length,
+        currentPage: currentPage ?? this.currentPage,
+      };
     }
 
     if (response && typeof response === 'object') {
@@ -120,14 +161,23 @@ export class MenuService {
       const candidates = [record['content'], record['items'], record['data']];
       for (const candidate of candidates) {
         if (Array.isArray(candidate)) {
-          return candidate
+          const items = candidate
             .map(item => this.normalizeItem(item, null))
             .filter((item): item is MenuItem => item !== null);
+          return {
+            items,
+            totalRecords: totalRecords ?? items.length,
+            currentPage: currentPage ?? this.currentPage,
+          };
         }
       }
     }
 
-    return [];
+    return {
+      items: [],
+      totalRecords: totalRecords ?? 0,
+      currentPage: currentPage ?? this.currentPage,
+    };
   }
 
   private normalizeItem(raw: unknown, fallback: MenuItem | null): MenuItem | null {
@@ -155,6 +205,10 @@ export class MenuService {
   }
 
   private readNumber(value: unknown): number | null {
+    if (typeof value === 'string' && value.trim() !== '') {
+      const parsed = Number(value);
+      return Number.isFinite(parsed) ? parsed : null;
+    }
     return typeof value === 'number' && Number.isFinite(value) ? value : null;
   }
 }

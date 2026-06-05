@@ -5,6 +5,8 @@ import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { PaginatorModule } from 'primeng/paginator';
+import type { PaginatorState } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { MenuService, MenuItem } from '../menu.service';
 import { FormularioComponent } from '../formulario/formulario.component';
@@ -18,6 +20,7 @@ import { FormularioComponent } from '../formulario/formulario.component';
     ButtonModule,
     DialogModule,
     ConfirmDialogModule,
+    PaginatorModule,
     FormularioComponent,
   ],
   styleUrls: ['./lista-menu.component.scss'],
@@ -29,6 +32,13 @@ export class ListaMenuComponent {
   private readonly confirmationService = inject(ConfirmationService);
 
   readonly items = toSignal(this.menuService.items$, { initialValue: this.menuService.getAll() });
+  readonly totalRecords = toSignal(this.menuService.totalRecords$, {
+    initialValue: this.menuService.getTotalRecords(),
+  });
+  readonly currentPage = toSignal(this.menuService.currentPage$, {
+    initialValue: this.menuService.getCurrentPage(),
+  });
+  readonly pageSize = this.menuService.pageSize;
   readonly categoryOrder = ['entrada', 'prato_principal', 'sobremesa', 'bebida'] as const;
   private readonly categoryRank = this.categoryOrder.reduce<Record<string, number>>((acc, key, index) => {
     acc[key] = index;
@@ -75,6 +85,10 @@ export class ListaMenuComponent {
 
   submitForm(): void {
     this.formComponent()?.submitFromParent();
+  }
+
+  onPageChange(event: PaginatorState): void {
+    this.menuService.loadPage(event.page ?? 0);
   }
 
   handleSave(item: MenuItem): void {

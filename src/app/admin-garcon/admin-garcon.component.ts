@@ -5,6 +5,8 @@ import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { PaginatorModule } from 'primeng/paginator';
+import type { PaginatorState } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { GarconService, Garcon } from './garcon.service';
@@ -27,6 +29,7 @@ type FolgasState = {
     ButtonModule,
     DialogModule,
     ConfirmDialogModule,
+    PaginatorModule,
     ToggleButtonModule,
   ],
   templateUrl: './admin-garcon.component.html',
@@ -40,6 +43,13 @@ export class AdminGarconComponent {
   private readonly fb = inject(FormBuilder).nonNullable;
 
   readonly items = toSignal(this.service.items$, { initialValue: this.service.getAll() });
+  readonly totalRecords = toSignal(this.service.totalRecords$, {
+    initialValue: this.service.getTotalRecords(),
+  });
+  readonly currentPage = toSignal(this.service.currentPage$, {
+    initialValue: this.service.getCurrentPage(),
+  });
+  readonly pageSize = this.service.pageSize;
   readonly sortedItems = computed(() =>
     [...this.items()].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' }))
   );
@@ -137,6 +147,10 @@ export class AdminGarconComponent {
       rejectLabel: 'Cancelar',
       accept: () => this.service.remove(index),
     });
+  }
+
+  onPageChange(event: PaginatorState): void {
+    this.service.loadPage(event.page ?? 0);
   }
 
   onImageSelected(event: Event): void {

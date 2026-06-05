@@ -51,6 +51,14 @@
         </tr>
       </ng-template>
     </p-table>
+
+    <p-paginator
+      [first]="currentPage() * pageSize"
+      [rows]="pageSize"
+      [totalRecords]="totalRecords()"
+      [rowsPerPageOptions]="[pageSize]"
+      (onPageChange)="onPageChange($event)"
+    ></p-paginator>
   }
 
   <p-dialog
@@ -100,8 +108,8 @@
               [formControlName]="day.key"
               [onLabel]="day.label"
               [offLabel]="day.label"
-              onIcon="pi pi-check"
-              offIcon="pi pi-times"
+              [onIcon]="'pi pi-check'"
+              [offIcon]="'pi pi-times'"
               styleClass="folga-toggle"
               [attr.aria-label]="day.full"
             ></p-toggleButton>
