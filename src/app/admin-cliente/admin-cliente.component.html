@@ -22,7 +22,7 @@
       <ng-template pTemplate="body" let-item>
         <tr>
           <td class="col-name">{{ item.nome }}</td>
-          <td>{{ item.telefone }}</td>
+          <td>{{ formatTelefoneDisplay(item.telefone) }}</td>
           <td>{{ formatEndereco(item) }}</td>
           <td>
             @if (item.referencia) {

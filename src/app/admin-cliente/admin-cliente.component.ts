@@ -87,7 +87,7 @@ export class AdminClienteComponent {
     const raw = this.form.getRawValue();
     const email = raw.email.trim();
     const observacoes = raw.observacoes.trim();
-    const telefone = this.formatTelefone(raw.telefone);
+    const telefone = this.onlyDigits(raw.telefone);
     const complemento = raw.complemento.trim();
     const referencia = raw.referencia.trim();
 
@@ -182,6 +182,10 @@ export class AdminClienteComponent {
     return parts.length ? parts.join(' - ') : '-';
   }
 
+  formatTelefoneDisplay(value: string | null | undefined): string {
+    return this.formatTelefone(value ?? '');
+  }
+
   onTelefoneInput(event: Event): void {
     const input = event.target as HTMLInputElement | null;
     if (!input) return;
@@ -204,5 +208,9 @@ export class AdminClienteComponent {
     const second = rest.slice(prefixLen);
     if (!second) return `(${ddd}) ${first}`;
     return `(${ddd}) ${first}-${second}`;
+  }
+
+  private onlyDigits(value: string): string {
+    return value.replace(/\D/g, '').slice(0, 11);
   }
 }
