@@ -70,7 +70,7 @@ export class MenuService {
       )
       .subscribe(saved => {
         if (!saved) return;
-        this.itemsSubject.next([...this.getAll(), saved]);
+        this.refresh();
       });
   }
 

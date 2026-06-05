@@ -106,7 +106,7 @@ export class ClienteService {
       )
       .subscribe(saved => {
         if (!saved) return;
-        this.itemsSubject.next([...this.getAll(), saved]);
+        this.refresh();
       });
   }
 
