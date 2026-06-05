@@ -25,7 +25,7 @@ export class GarconService {
   readonly items$ = this.itemsSubject.asObservable();
   readonly totalRecords$ = this.totalRecordsSubject.asObservable();
   readonly currentPage$ = this.currentPageSubject.asObservable();
-  readonly pageSize = 20;
+  readonly pageSize = 10;
 
   constructor() {
     this.refresh();
@@ -133,7 +133,7 @@ export class GarconService {
     return new HttpParams()
       .set('order', 'asc')
       .set('page', String(page))
-      .set('pageSize', '20')
+      .set('pageSize', String(this.pageSize))
       .set('sort', 'nome');
   }
 
