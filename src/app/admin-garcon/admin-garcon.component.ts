@@ -117,7 +117,7 @@ export class AdminGarconComponent {
     const item: Garcon = {
       nome: raw.nome.trim(),
       documento: raw.documento.trim(),
-      fotoDataUrl: raw.fotoDataUrl ?? null,
+      fotoBase64: raw.fotoDataUrl ?? null,
       folgas: this.getSelectedFolgas(raw.folgas),
     };
 
@@ -193,7 +193,7 @@ export class AdminGarconComponent {
         {
           nome: item.nome ?? '',
           documento: item.documento ?? '',
-          fotoDataUrl: item.fotoDataUrl ?? null,
+          fotoDataUrl: item.fotoBase64 ?? null,
           folgas: this.toFolgasState(item.folgas),
         },
         { emitEvent: false }

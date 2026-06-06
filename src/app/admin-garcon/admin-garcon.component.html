@@ -23,8 +23,8 @@
           <td>{{ item.documento }}</td>
           <td>{{ formatFolgas(item.folgas) }}</td>
           <td>
-            @if (item.fotoDataUrl) {
-              <img class="thumb" [src]="item.fotoDataUrl" [alt]="'Foto de ' + item.nome" />
+            @if (item.fotoBase64) {
+              <img class="thumb" [src]="item.fotoBase64" [alt]="'Foto de ' + item.nome" />
             } @else {
               <span class="muted">Sem foto</span>
             }

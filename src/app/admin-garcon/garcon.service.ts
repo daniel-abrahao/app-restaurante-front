@@ -10,7 +10,7 @@ export interface Garcon {
   id?: number;
   nome: string;
   documento: string;
-  fotoDataUrl?: string | null;
+  fotoBase64?: string | null;
   folgas: string[];
 }
 
@@ -189,7 +189,7 @@ export class GarconService {
       id: this.readNumber(record['id']) ?? fallback?.id,
       nome: this.readString(record['nome']) || fallback?.nome || '',
       documento: this.readString(record['documento']) || fallback?.documento || '',
-      fotoDataUrl: this.readNullableString(record['fotoDataUrl']) ?? fallback?.fotoDataUrl ?? null,
+      fotoBase64: this.readNullableString(record['fotoBase64']) ?? fallback?.fotoBase64 ?? null,
       folgas: this.readStringArray(record['folgas']) ?? fallback?.folgas ?? [],
     };
   }
