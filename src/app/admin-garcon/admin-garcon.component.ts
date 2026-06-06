@@ -50,9 +50,6 @@ export class AdminGarconComponent {
     initialValue: this.service.getCurrentPage(),
   });
   readonly pageSize = this.service.pageSize;
-  readonly sortedItems = computed(() =>
-    [...this.items()].sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' }))
-  );
   readonly dialogVisible = signal(false);
   readonly activeIndex = signal<number | null>(null);
   readonly dialogTitle = computed(() =>

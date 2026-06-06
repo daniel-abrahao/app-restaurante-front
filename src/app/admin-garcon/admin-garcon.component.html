@@ -7,7 +7,7 @@
   @if (items().length === 0) {
     <div class="empty">Nenhum garçon cadastrado.</div>
   } @else {
-    <p-table [value]="sortedItems()" responsiveLayout="scroll" [tableStyle]="{ 'min-width': '52rem' }">
+    <p-table [value]="items()" responsiveLayout="scroll" [tableStyle]="{ 'min-width': '52rem' }">
       <ng-template pTemplate="header">
         <tr>
           <th>Nome</th>
