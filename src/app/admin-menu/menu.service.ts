@@ -8,11 +8,22 @@ import { environment } from '../../environments/environment';
 
 export interface MenuItem {
   id?: number;
-  categoria: string;
+  categoria: MenuCategoria;
   nome: string;
   ingredientes: string;
   valor: number;
   imagemDataUrl?: string | null;
+}
+
+export type MenuCategoria = 'ENTRADA' | 'PRATO_PRINCIPAL' | 'SOBREMESA' | 'BEBIDA';
+
+interface MenuItemApiPayload {
+  id?: number;
+  categoria: string;
+  nome: string;
+  ingredientes: string;
+  valor: number;
+  imagemBase64?: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -63,7 +74,7 @@ export class MenuService {
 
   add(item: MenuItem): void {
     this.http
-      .post<unknown>(this.endpoint(), item)
+      .post<unknown>(this.endpoint(), this.serializeItem(item))
       .pipe(
         map(response => this.normalizeItem(response, item)),
         catchError(() => of<MenuItem | null>(null))
@@ -86,7 +97,7 @@ export class MenuService {
     }
 
     this.http
-      .put<unknown>(this.endpoint(`/${current.id}`), item)
+      .put<unknown>(this.endpoint(`/${current.id}`), this.serializeItem(item))
       .pipe(
         map(response => this.normalizeItem(response, { ...item, id: current.id })),
         catchError(() => of<MenuItem | null>(null))
@@ -188,12 +199,40 @@ export class MenuService {
     const record = raw as Record<string, unknown>;
     return {
       id: this.readNumber(record['id']) ?? fallback?.id,
-      categoria: this.readString(record['categoria']) || fallback?.categoria || '',
+      categoria: this.readCategoria(record['categoria']) ?? fallback?.categoria ?? 'ENTRADA',
       nome: this.readString(record['nome']) || fallback?.nome || '',
       ingredientes: this.readString(record['ingredientes']) || fallback?.ingredientes || '',
       valor: this.readNumber(record['valor']) ?? fallback?.valor ?? 0,
-      imagemDataUrl: this.readNullableString(record['imagemDataUrl']) ?? fallback?.imagemDataUrl ?? null,
+      imagemDataUrl:
+        this.readNullableString(record['imagemDataUrl']) ??
+        this.readNullableString(record['imagemBase64']) ??
+        fallback?.imagemDataUrl ??
+        null,
     };
+  }
+
+  private serializeItem(item: MenuItem): MenuItemApiPayload {
+    return {
+      id: item.id,
+      categoria: item.categoria,
+      nome: item.nome,
+      ingredientes: item.ingredientes,
+      valor: item.valor,
+      imagemBase64: item.imagemDataUrl ?? null,
+    };
+  }
+
+  private readCategoria(value: unknown): MenuCategoria | null {
+    if (typeof value !== 'string') return null;
+    switch (value) {
+      case 'ENTRADA':
+      case 'PRATO_PRINCIPAL':
+      case 'SOBREMESA':
+      case 'BEBIDA':
+        return value as MenuCategoria;
+      default:
+        return null;
+    }
   }
 
   private readString(value: unknown): string {

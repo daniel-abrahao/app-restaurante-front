@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, effect, inject, input, output, viewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MenuItem } from '../menu.service';
+import { MenuItem, MenuCategoria } from '../menu.service';
 
 @Component({
   selector: 'menu-form',
@@ -15,11 +15,11 @@ export class FormularioComponent {
 
   private readonly fb = inject(FormBuilder);
 
-  readonly categories = [
-    { value: 'entrada', label: 'Entrada' },
-    { value: 'prato_principal', label: 'Prato principal' },
-    { value: 'sobremesa', label: 'Sobremesa' },
-    { value: 'bebida', label: 'Bebida' },
+  readonly categories: { value: MenuCategoria; label: string }[] = [
+    { value: 'ENTRADA', label: 'Entrada' },
+    { value: 'PRATO_PRINCIPAL', label: 'Prato principal' },
+    { value: 'SOBREMESA', label: 'Sobremesa' },
+    { value: 'BEBIDA', label: 'Bebida' },
   ];
 
   readonly form = this.fb.group({
@@ -50,20 +50,38 @@ export class FormularioComponent {
     }
 
     const raw = this.form.getRawValue();
+    const categoriaRaw = (raw.categoria?.trim() ?? '') as string;
+
+    if (!this.isValidCategoria(categoriaRaw)) {
+      this.form.controls.categoria.setErrors({ invalid: true });
+      this.form.markAllAsTouched();
+      return;
+    }
+
     const item: MenuItem = {
-      categoria: raw.categoria?.trim() ?? '',
+      categoria: categoriaRaw as MenuCategoria,
       nome: raw.nome?.trim() ?? '',
       ingredientes: raw.ingredientes?.trim() ?? '',
       valor: Number(raw.valor) || 0,
       imagemDataUrl: raw.imagemDataUrl ?? null,
     };
 
-    if (!item.categoria || !item.nome) {
+    if (!item.nome) {
+      this.form.controls.nome.setErrors({ required: true });
       this.form.markAllAsTouched();
       return;
     }
 
     this.formSubmit.emit(item);
+  }
+
+  private isValidCategoria(value: unknown): value is MenuCategoria {
+    return (
+      value === 'ENTRADA' ||
+      value === 'PRATO_PRINCIPAL' ||
+      value === 'SOBREMESA' ||
+      value === 'BEBIDA'
+    );
   }
 
   onImageSelected(event: Event): void {
